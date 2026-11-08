@@ -1,0 +1,676 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LIGNITE | CanSat Flight & Defense Systems</title>
+
+  <!-- Fonty: Oxanium (nagłówki/dane) + Chivo (treść) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chivo:wght@300;400;600&family=Oxanium:wght@400;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #060913;
+      --bg-panel: rgba(10, 16, 32, 0.75);
+      --border-tech: rgba(255, 255, 255, 0.14);
+      --border-accent: rgba(232, 121, 249, 0.5);
+      
+      --magenta: #e879f9;
+      --magenta-dim: rgba(232, 121, 249, 0.12);
+      --amber: #f59e0b;
+      --cyan: #38bdf8;
+      
+      --text-main: #f1f5f9;
+      --text-muted: #8492a6;
+      --text-tech: #a5b4fc;
+      --font-display: 'Oxanium', sans-serif;
+      --font-body: 'Chivo', sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--text-main);
+      font-family: var(--font-body);
+      line-height: 1.55;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Tło inżynieryjne: siatka techniczna + głęboki gradient */
+    body::before {
+      content: "";
+      position: fixed;
+      inset: 0;
+      background-image: 
+        linear-gradient(to right, rgba(255,255,255,0.035) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(255,255,255,0.035) 1px, transparent 1px),
+        radial-gradient(circle at 80% 10%, rgba(217, 70, 239, 0.18) 0%, transparent 50%),
+        radial-gradient(circle at 20% 85%, rgba(14, 116, 144, 0.2) 0%, transparent 55%);
+      background-size: 40px 40px, 40px 40px, 100% 100%, 100% 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Nawigacja */
+    nav {
+      position: sticky;
+      top: 0;
+      width: 100%;
+      background: rgba(6, 9, 19, 0.85);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border-tech);
+      z-index: 100;
+    }
+
+    .nav-container {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0.85rem 1.25rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none;
+      color: #fff;
+      font-family: var(--font-display);
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: 1.5px;
+    }
+
+    .brand-frame {
+      width: 38px;
+      height: 38px;
+      border: 1.5px solid var(--border-tech);
+      border-radius: 6px;
+      background: rgba(255, 255, 255, 0.05);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 4px;
+    }
+
+    .brand-frame img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .lang-switch {
+      display: flex;
+      background: rgba(255, 255, 255, 0.04);
+      border: 1px solid var(--border-tech);
+      border-radius: 4px;
+      padding: 2px;
+    }
+
+    .lang-btn {
+      background: transparent;
+      border: none;
+      color: var(--text-muted);
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      font-weight: 600;
+      padding: 0.35rem 0.65rem;
+      cursor: pointer;
+      border-radius: 2px;
+      transition: all 0.2s ease;
+    }
+
+    .lang-btn.active {
+      background: var(--magenta);
+      color: #000;
+      font-weight: 700;
+    }
+
+    /* Układ główny */
+    main {
+      position: relative;
+      z-index: 1;
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 2rem 1.25rem 5rem;
+    }
+
+    /* Panele techniczne */
+    .tech-panel {
+      position: relative;
+      background: var(--bg-panel);
+      border: 1px solid var(--border-tech);
+      padding: 2rem 1.5rem;
+      margin-bottom: 2rem;
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      clip-path: polygon(0 0, calc(100% - 14px) 0, 100% 14px, 100% 100%, 14px 100%, 0 calc(100% - 14px));
+    }
+
+    /* Znaczniki w narożnikach */
+    .corner-tag {
+      position: absolute;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--text-tech);
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      opacity: 0.8;
+    }
+    .tag-tl { top: 6px; left: 10px; }
+    .tag-tr { top: 6px; right: 16px; }
+
+    /* Sekcja Hero */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 2.5rem;
+      align-items: center;
+      padding: 1rem 0 3rem;
+    }
+
+    @media (min-width: 840px) {
+      .hero-grid {
+        grid-template-columns: 1.15fr 0.85fr;
+        padding: 3rem 0 4rem;
+      }
+    }
+
+    .telemetry-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--magenta-dim);
+      border: 1px solid var(--border-accent);
+      padding: 0.25rem 0.65rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--magenta);
+      margin-bottom: 1.25rem;
+      text-transform: uppercase;
+    }
+
+    .pulse-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--amber);
+      box-shadow: 0 0 8px var(--amber);
+    }
+
+    h1 {
+      font-family: var(--font-display);
+      font-size: clamp(2.1rem, 5.5vw, 3.4rem);
+      line-height: 1.1;
+      font-weight: 800;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      margin-bottom: 1.25rem;
+    }
+
+    h1 span.accent {
+      color: var(--magenta);
+      text-shadow: 0 0 25px rgba(232, 121, 249, 0.4);
+    }
+
+    .lead-text {
+      font-size: 1.05rem;
+      color: var(--text-muted);
+      margin-bottom: 2rem;
+      max-width: 520px;
+    }
+
+    /* Puszka 3D / Floating can */
+    .stage-container {
+      position: relative;
+      width: 100%;
+      aspect-ratio: 1;
+      max-width: 480px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .radar-circle {
+      position: absolute;
+      inset: 15px;
+      border: 1px dashed rgba(255, 255, 255, 0.18);
+      border-radius: 50%;
+      pointer-events: none;
+      animation: rotate-radar 24s linear infinite;
+    }
+
+    .can-visual {
+      width: 110%;
+      height: 110%;
+      object-fit: contain;
+      filter: drop-shadow(0 20px 30px rgba(0,0,0,0.85));
+      animation: can-float 4.5s ease-in-out infinite;
+      z-index: 2;
+    }
+
+    @keyframes can-float {
+      0%, 100% { transform: translateY(0px) rotate(-1deg); }
+      50% { transform: translateY(-12px) rotate(1.5deg); }
+    }
+
+    @keyframes rotate-radar {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    /* Misje / Specyfikacja */
+    .section-title-wrap {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1.25rem;
+      border-bottom: 1px solid var(--border-tech);
+      padding-bottom: 0.5rem;
+    }
+
+    .section-num {
+      font-family: var(--font-mono);
+      color: var(--magenta);
+      font-size: 0.9rem;
+      font-weight: 700;
+    }
+
+    h2 {
+      font-family: var(--font-display);
+      font-size: 1.6rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .cards-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+      margin-bottom: 2.5rem;
+    }
+
+    @media (min-width: 768px) {
+      .cards-grid {
+        grid-template-columns: 1fr 1fr;
+      }
+    }
+
+    .mission-badge {
+      display: inline-block;
+      font-family: var(--font-mono);
+      font-size: 0.65rem;
+      color: var(--amber);
+      border: 1px solid rgba(245, 158, 11, 0.3);
+      padding: 0.15rem 0.5rem;
+      margin-bottom: 0.75rem;
+      text-transform: uppercase;
+    }
+
+    .tech-panel h3 {
+      font-family: var(--font-display);
+      font-size: 1.25rem;
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
+      margin-bottom: 0.75rem;
+      color: #fff;
+    }
+
+    .tech-panel p {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+    }
+
+    .specs-list {
+      margin-top: 1rem;
+      padding-top: 0.75rem;
+      border-top: 1px solid rgba(255, 255, 255, 0.08);
+      list-style: none;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-tech);
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    /* Sekcja Sponsorzy i Partnerzy */
+    .partner-banner {
+      border: 1px solid var(--border-accent);
+      background: linear-gradient(135deg, rgba(232, 121, 249, 0.08) 0%, rgba(10, 16, 32, 0.9) 100%);
+      padding: 2.5rem 1.5rem;
+      text-align: center;
+    }
+
+    .partner-title {
+      font-family: var(--font-display);
+      font-size: clamp(1.4rem, 3.5vw, 1.9rem);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+      color: #fff;
+    }
+
+    .partner-desc {
+      color: var(--text-muted);
+      font-size: 0.95rem;
+      max-width: 600px;
+      margin: 0 auto 2rem;
+    }
+
+    .slots-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(135px, 1fr));
+      gap: 0.75rem;
+      margin-bottom: 2rem;
+    }
+
+    .logo-slot {
+      border: 1px dashed rgba(255, 255, 255, 0.2);
+      background: rgba(255, 255, 255, 0.02);
+      border-radius: 4px;
+      height: 80px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+      transition: all 0.25s ease;
+    }
+
+    .logo-slot:hover {
+      border-color: var(--magenta);
+      color: var(--magenta);
+      background: rgba(232, 121, 249, 0.04);
+    }
+
+    /* Przyciski operacyjne */
+    .actions-cluster {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      justify-content: center;
+      align-items: center;
+    }
+
+    @media (min-width: 520px) {
+      .actions-cluster {
+        flex-direction: row;
+      }
+    }
+
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      min-height: 48px;
+      padding: 0.75rem 1.6rem;
+      font-family: var(--font-display);
+      font-size: 0.95rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      clip-path: polygon(0 0, calc(100% - 10px) 0, 100% 10px, 100% 100%, 10px 100%, 0 calc(100% - 10px));
+      border: none;
+    }
+
+    .btn-primary {
+      background: var(--magenta);
+      color: #050811;
+      box-shadow: 0 0 20px rgba(232, 121, 249, 0.35);
+    }
+
+    .btn-primary:hover {
+      background: #f0abfc;
+      transform: translateY(-2px);
+      box-shadow: 0 0 28px rgba(232, 121, 249, 0.55);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border: 1px solid var(--border-tech);
+      color: #fff;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--magenta);
+      color: var(--magenta);
+      background: rgba(255, 255, 255, 0.04);
+    }
+
+    /* Footer */
+    footer {
+      border-top: 1px solid var(--border-tech);
+      padding: 2.5rem 1.25rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Pasek górny -->
+  <nav>
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <div class="brand-frame">
+          <img src="logolignite.jpg" alt="Logo Lignite" onerror="this.style.display='none'; this.parentElement.innerText='L'">
+        </div>
+        <span>LIGNITE</span>
+      </a>
+
+      <div class="nav-actions">
+        <div class="lang-switch" role="group" aria-label="Wybór języka">
+          <button id="btn-pl" class="lang-btn active" onclick="switchLang('pl')">PL</button>
+          <button id="btn-en" class="lang-btn" onclick="switchLang('en')">EN</button>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Treść strony -->
+  <main>
+    <!-- Sekcja Hero -->
+    <section class="hero-grid">
+      <div class="hero-text-block">
+        <div class="telemetry-chip">
+          <span class="pulse-dot"></span>
+          <span data-key="tag">CANSAT 2026 // DEFENSE & SPACE PAYLOAD</span>
+        </div>
+        <h1>
+          <span data-key="heroH1A">Niezależna</span><br>
+          <span class="accent" data-key="heroH1B">Radiolokacja</span><br>
+          <span data-key="heroH1C">w skali mikro.</span>
+        </h1>
+        <p class="lead-text" data-key="heroDesc">
+          Budujemy satelitę klasy CanSat wyposażoną w autorski system pozycjonowania radiowego LoRa. Odporny na spoofing i zagłuszanie sygnałów GNSS — projektowany z myślą o operacjach kosmicznych i sektorze obronnym.
+        </p>
+
+        <div class="actions-cluster" style="justify-content: flex-start;">
+          <a href="#partnerzy" class="btn btn-primary" data-key="btnSponsor">Zostań partnerem</a>
+          <a href="https://instagram.com/lignitesat" target="_blank" rel="noopener" class="btn btn-outline" data-key="btnIg">Instagram ↗</a>
+        </div>
+      </div>
+
+      <div class="stage-container">
+        <div class="radar-circle"></div>
+        <!-- Tutaj wstawiasz wycięty plik puszka.png -->
+        <img class="can-visual" src="puszka.png" alt="Puszka Lignite CanSat" onerror="this.src='ligniteanimacja0.png'">
+      </div>
+    </section>
+
+    <!-- Sekcja Założenia / Specyfikacja -->
+    <div class="section-title-wrap">
+      <span class="section-num">[01]</span>
+      <h2 data-key="specHeading">Specyfikacja Misji</h2>
+    </div>
+
+    <div class="cards-grid">
+      <!-- Misja Podstawowa -->
+      <div class="tech-panel">
+        <span class="corner-tag tag-tl">SECTOR: TELEMETRY</span>
+        <div class="mission-badge" data-key="badgePri">Misja Podstawowa</div>
+        <h3 data-key="priTitle">Profil Atmosferyczny</h3>
+        <p data-key="priDesc">
+          Aktywny pomiar ciśnienia atmosferycznego, wysokości barometrycznej oraz gradientu temperatury podczas opadania. Radiowa transmisja danych telemetrii na żywo do mobilnej stacji naziemnej w interwale 1 Hz.
+        </p>
+        <ul class="specs-list">
+          <li>&gt; SENSOR: Barometric / Thermal Array</li>
+          <li>&gt; BROADCAST: 1s live telemetry stream</li>
+          <li>&gt; DESCENT: Parachute recovery descent rate &lt; 10m/s</li>
+        </ul>
+      </div>
+
+      <!-- Misja Dodatkowa (LoRa / Defense) -->
+      <div class="tech-panel">
+        <span class="corner-tag tag-tl">SECTOR: RADIOCOMMUNICATION</span>
+        <div class="mission-badge" style="color: var(--cyan); border-color: rgba(56, 189, 248, 0.4);" data-key="badgeSec">Misja Dodatkowa / Defense</div>
+        <h3 data-key="secTitle">Lokalizacja Anty-Jamming</h3>
+        <p data-key="secDesc">
+          Autorski moduł radiolokacji naziemno-satelitarnej oparty o architekturę LoRa. System działa bez łączności satelitarnej GPS/Galileo, gwarantując niezawodne wyznaczenie koordynatów w warunkach wrogiego zakłócania (jamming/spoofing).
+        </p>
+        <ul class="specs-list">
+          <li>&gt; PROTOCOL: Proprietary LoRa Multilateration</li>
+          <li>&gt; RELIABILITY: Total GNSS-Denied Independence</li>
+          <li>&gt; APPLICATIONS: Spacecraft Tracking &amp; Defense Ops</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Sekcja Partnerzy i Sponsorzy -->
+    <div class="section-title-wrap" id="partnerzy">
+      <span class="section-num">[02]</span>
+      <h2 data-key="partnerHeading">Partnerzy &amp; Współpraca</h2>
+    </div>
+
+    <section class="tech-panel partner-banner">
+      <span class="corner-tag tag-tl">SECTOR: PARTNERSHIP</span>
+      
+      <h3 class="partner-title" data-key="partnerBannerTitle">Dołącz do misji jako partner strategiczny</h3>
+      <p class="partner-desc" data-key="partnerBannerDesc">
+        Wspierasz zespół młodych inżynierów rozwijających technologie kosmiczne i obronne. Oferujemy ekspozycję Twojej marki na kadłubie satelity, panelach stacji naziemnej oraz w materiałach konkursowych.
+      </p>
+
+      <!-- Sloty na logotypy -->
+      <!-- Sloty na logotypy -->
+	<div class="slots-grid">
+	  <div class="logo-slot" data-key="slotPlaceholder">[ MIEJSCE NA TWOJE LOGO ]</div>
+	  <div class="logo-slot" data-key="slotPlaceholder">[ MIEJSCE NA TWOJE LOGO ]</div>
+	  <div class="logo-slot" data-key="slotPlaceholder">[ MIEJSCE NA TWOJE LOGO ]</div>
+	  <div class="logo-slot" data-key="slotPlaceholder">[ MIEJSCE NA TWOJE LOGO ]</div>
+	</div>
+
+      <div class="actions-cluster">
+        <!-- Bezpośredni link mailowy z gotowym tematem i treścią -->
+        <a href="https://mail.google.com/mail/?view=cm&fs=1&to=lignitesat@googlegroups.com&su=Wsp%C3%B3%C5%82praca%20Sponsorska%20-%20CanSat%20Lignite&body=Dzie%C5%84%20dobry,%0A%0AChcieliby%C5%9Bmy%20pozna%C4%87%20szczeg%C3%B3%C5%82y%20wsparcia%20Waszego%20projektu%20CanSat.%0A%0ANazwa%20firmy:%20" 
+		   target="_blank" 
+		   rel="noopener noreferrer" 
+		   class="btn btn-primary" 
+		   data-key="btnPartnerMail">
+		  Zostań partnerem / Współpraca
+		</a>
+      </div>
+    </section>
+
+    <!-- Kontakt Footer -->
+    <footer>
+      <p>&copy; 2026 LIGNITE CANSAT TEAM. <span data-key="rights">Wszelkie prawa zastrzeżone.</span></p>
+      <p style="margin-top: 0.4rem; color: var(--text-tech);">HARDWARE-FIRST // RADIONAVIGATION SYSTEM</p>
+    </footer>
+  </main>
+
+  <!-- Obsługa wielojęzyczności -->
+  <script>
+    const i18n = {
+      pl: {
+        tag: "CANSAT 2026 // LIGNITESAT",
+        heroH1A: "Niezależna",
+        heroH1B: "Radiolokacja",
+        heroH1C: "w skali mikro.",
+        heroDesc: "Budujemy satelitę CanSat wyposażoną w autorski system lokalizacji radiowej, niezależny od sieci GNSS, opierający się na modułach LoRa. Projektowany z myślą o sektorze kosmicznym, ale też sektorze obronności.",
+        btnSponsor: "Zostań partnerem",
+        btnIg: "Instagram ↗",
+        specHeading: "Specyfikacja Misji",
+        badgePri: "Misja Podstawowa",
+        priTitle: "Profil Atmosferyczny",
+        priDesc: "Aktywny pomiar ciśnienia atmosferycznego, wysokości barometrycznej oraz gradientu temperatury podczas opadania. Radiowa transmisja danych telemetrii na żywo do mobilnej stacji naziemnej w interwale 1 Hz.",
+        badgeSec: "Misja Dodatkowa",
+        secTitle: "Niezależna lokalizacja",
+        secDesc: "Autorski moduł radiolokacji naziemno-satelitarnej oparty o architekturę LoRa. System działa bez łączności satelitarnej GPS, wyznaczając koordynaty. Porównujemy wyliczoną trajektorię lotu z rzeczywistą, badając działanie naszego prototypu.",
+        partnerHeading: "Partnerzy & Współpraca",
+        partnerBannerTitle: "Dołącz do misji jako partner strategiczny",
+        partnerBannerDesc: "Wspierasz zespół młodych inżynierów rozwijających technologie kosmiczne i obronne. Oferujemy ekspozycję Twojej marki w materiałach konkursowych i social mediach.",
+        btnPartnerMail: "Zostań partnerem / Współpraca",
+		slotPlaceholder: "[ MIEJSCE NA TWOJE LOGO ]",
+        rights: "Email: lignitesat@googlegroups.com"
+      },
+      en: {
+        tag: "CANSAT 2026 // LIGNITESAT",
+		heroH1A: "Independent",
+		heroH1B: "Radiolocation",
+		heroH1C: "at micro scale.",
+		heroDesc: "We are building a CanSat satellite equipped with a proprietary radio positioning system, independent of GNSS networks and powered by LoRa modules. Engineered for both the space and defense sectors.",
+		btnSponsor: "Become a Partner",
+		btnIg: "Instagram ↗",
+		specHeading: "Mission Specifications",
+		badgePri: "Primary Mission",
+		priTitle: "Atmospheric Profiling",
+		priDesc: "Continuous measurement of ambient air pressure, barometric altitude, and temperature gradient during descent. Real-time telemetry broadcast transmitted to a mobile ground station at a 1 Hz interval.",
+		badgeSec: "Secondary Mission",
+		secTitle: "Independent Positioning",
+		secDesc: "A proprietary radiolocation module based on LoRa architecture. The system determines spatial coordinates without GPS connectivity. We benchmark the computed flight trajectory against the actual descent to evaluate prototype performance.",
+		partnerHeading: "Partners & Sponsorship",
+		partnerBannerTitle: "Join Our Mission as a Strategic Partner",
+		partnerBannerDesc: "Support a team of young engineers developing dual-use aerospace and defense technologies. We provide brand visibility across our competition reports and social media channels.",
+		btnPartnerMail: "Become a Partner / Sponsor Us",
+		slotPlaceholder: "[ YOUR LOGO HERE ]",
+		rights: "Email: lignitesat@googlegroups.com"
+      }
+    };
+
+    function switchLang(lang) {
+      document.querySelectorAll("[data-key]").forEach(el => {
+        const key = el.getAttribute("data-key");
+        if (i18n[lang] && i18n[lang][key]) {
+          el.innerText = i18n[lang][key];
+        }
+      });
+
+      document.getElementById("btn-pl").classList.toggle("active", lang === 'pl');
+      document.getElementById("btn-en").classList.toggle("active", lang === 'en');
+      localStorage.setItem("lignite_lang", lang);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const stored = localStorage.getItem("lignite_lang") || "pl";
+      switchLang(stored);
+    });
+  </script>
+</body>
+</html>
