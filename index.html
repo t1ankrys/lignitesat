@@ -532,6 +532,7 @@
 	  overflow: hidden;
 	}
 
+	/* Domyślny wygląd zdjęcia na desktopie */
 	.member-avatar {
 	  width: 100%;
 	  height: 100%;
@@ -540,10 +541,26 @@
 	  transition: filter 0.3s ease;
 	}
 
-	.member-card:hover .member-avatar {
-	  filter: grayscale(0%) contrast(100%);
+	/* Hover tylko dla urządzeń z fizycznym kursorem/myszką */
+	@media (hover: hover) and (pointer: fine) {
+	  .member-card:hover .member-avatar {
+		filter: grayscale(0%) contrast(100%);
+	  }
 	}
 
+	/* Ekrany dotykowe / smartfony: zdjęcia zawsze w pełnym kolorze i bez wymogu klikania */
+	@media (hover: none) {
+	  .member-avatar {
+		filter: grayscale(0%) contrast(100%) !important;
+	  }
+	  .member-card {
+		border-color: rgba(232, 121, 249, 0.35); /* subtelne stałe podświetlenie ramki */
+	  }
+	  .member-card.mentor {
+		border-color: rgba(56, 189, 248, 0.55);
+	  }
+	}
+	
 	.member-badge {
 	  display: inline-block;
 	  font-family: var(--font-mono);
@@ -914,6 +931,60 @@
       const stored = localStorage.getItem("lignite_lang") || "pl";
       switchLang(stored);
     });
+	document.addEventListener("DOMContentLoaded", () => {
+	  const carousel = document.querySelector(".team-carousel");
+	  if (!carousel) return;
+
+	  const originalCards = Array.from(carousel.children);
+	  if (originalCards.length === 0) return;
+
+	  // Klonujemy elementy do przodu i do tyłu, aby stworzyć płynny bufor pętli
+	  originalCards.forEach((card) => {
+		const cloneEnd = card.cloneNode(true);
+		cloneEnd.setAttribute("aria-hidden", "true");
+		carousel.appendChild(cloneEnd);
+	  });
+
+	  originalCards.slice().reverse().forEach((card) => {
+		const cloneStart = card.cloneNode(true);
+		cloneStart.setAttribute("aria-hidden", "true");
+		carousel.insertBefore(cloneStart, carousel.firstChild);
+	  });
+
+	  // Ustawienie początkowej pozycji na pierwszy oryginalny kafelek (omijamy przedni klon)
+	  let singleSetWidth = 0;
+	  const initOffset = () => {
+		singleSetWidth = originalCards.reduce((acc, el) => acc + el.offsetWidth + 20, 0); // 20px = gap (1.25rem)
+		carousel.scrollLeft = singleSetWidth;
+	  };
+
+	  // Uruchomienie po załadowaniu wymiarów
+	  window.addEventListener("load", initOffset);
+	  initOffset();
+
+	  // Sprawdzanie i bezszwowe zapętlanie podczas przewijania
+	  let isLooping = false;
+	  carousel.addEventListener("scroll", () => {
+		if (isLooping || singleSetWidth === 0) return;
+
+		// Gdy użytkownik dojdzie do lewej krawędzi (klonów z przodu)
+		if (carousel.scrollLeft <= 5) {
+		  isLooping = true;
+		  carousel.style.scrollBehavior = "auto";
+		  carousel.scrollLeft += singleSetWidth;
+		  carousel.style.scrollBehavior = "";
+		  setTimeout(() => { isLooping = false; }, 40);
+		} 
+		// Gdy użytkownik dojdzie do prawej krawędzi (klonów z tyłu)
+		else if (carousel.scrollLeft >= singleSetWidth * 2) {
+		  isLooping = true;
+		  carousel.style.scrollBehavior = "auto";
+		  carousel.scrollLeft -= singleSetWidth;
+		  carousel.style.scrollBehavior = "";
+		  setTimeout(() => { isLooping = false; }, 40);
+		}
+	  }, { passive: true });
+	});
   </script>
 </body>
 </html>
