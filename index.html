@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>LIGNITE | CanSat Flight & Defense Systems</title>
+  <title>LIGNITE | CanSat Independent Localization Systems</title>
 
   <!-- Fonty: Oxanium (nagłówki/dane) + Chivo (treść) -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -461,6 +461,123 @@
       color: var(--magenta);
       background: rgba(255, 255, 255, 0.04);
     }
+	
+	/* Sekcja Zespołu - Poziomy Scroll */
+	.team-carousel-container {
+	  position: relative;
+	  margin: 1.5rem 0 3.5rem;
+	}
+
+	.team-carousel {
+	  display: flex;
+	  gap: 1.25rem;
+	  overflow-x: auto;
+	  scroll-snap-type: x mandatory;
+	  padding: 1rem 0.25rem 1.5rem;
+	  -webkit-overflow-scrolling: touch;
+	  scrollbar-width: thin;
+	  scrollbar-color: var(--magenta) rgba(255, 255, 255, 0.05);
+	}
+
+	.team-carousel::-webkit-scrollbar {
+	  height: 6px;
+	}
+
+	.team-carousel::-webkit-scrollbar-track {
+	  background: rgba(255, 255, 255, 0.04);
+	  border-radius: 999px;
+	}
+
+	.team-carousel::-webkit-scrollbar-thumb {
+	  background: var(--magenta);
+	  border-radius: 999px;
+	}
+
+	/* Pojedyncza karta członka zespołu */
+	.member-card {
+	  flex: 0 0 240px; /* Stała szerokość karty przy przewijaniu */
+	  scroll-snap-align: start;
+	  background: var(--bg-panel);
+	  border: 1px solid var(--border-tech);
+	  padding: 1.25rem;
+	  position: relative;
+	  clip-path: polygon(0 0, calc(100% - 12px) 0, 100% 12px, 100% 100%, 12px 100%, 0 calc(100% - 12px));
+	  transition: transform 0.25s ease, border-color 0.25s ease;
+	}
+
+	.member-card:hover {
+	  transform: translateY(-4px);
+	  border-color: var(--border-accent);
+	}
+
+	/* Wyróżniona karta opiekuna */
+	.member-card.mentor {
+	  border-color: rgba(56, 189, 248, 0.4);
+	  background: linear-gradient(180deg, rgba(56, 189, 248, 0.08) 0%, var(--bg-panel) 100%);
+	}
+
+	.member-card.mentor .member-badge {
+	  color: var(--cyan);
+	  border-color: rgba(56, 189, 248, 0.4);
+	}
+
+	/* Ramka na zdjęcie */
+	.member-avatar-wrap {
+	  width: 100%;
+	  aspect-ratio: 1;
+	  background: rgba(255, 255, 255, 0.03);
+	  border: 1px solid var(--border-tech);
+	  margin-bottom: 1rem;
+	  position: relative;
+	  overflow: hidden;
+	}
+
+	.member-avatar {
+	  width: 100%;
+	  height: 100%;
+	  object-fit: cover;
+	  filter: grayscale(80%) contrast(110%);
+	  transition: filter 0.3s ease;
+	}
+
+	.member-card:hover .member-avatar {
+	  filter: grayscale(0%) contrast(100%);
+	}
+
+	.member-badge {
+	  display: inline-block;
+	  font-family: var(--font-mono);
+	  font-size: 0.65rem;
+	  color: var(--magenta);
+	  border: 1px solid var(--border-accent);
+	  padding: 0.15rem 0.4rem;
+	  margin-bottom: 0.6rem;
+	  text-transform: uppercase;
+	}
+
+	.member-name {
+	  font-family: var(--font-display);
+	  font-size: 1.15rem;
+	  font-weight: 700;
+	  color: #fff;
+	  letter-spacing: 0.02em;
+	  margin-bottom: 0.25rem;
+	}
+
+	.member-role {
+	  font-size: 0.85rem;
+	  color: var(--text-muted);
+	  line-height: 1.35;
+	}
+
+	.member-subtext {
+	  font-family: var(--font-mono);
+	  font-size: 0.7rem;
+	  color: var(--text-tech);
+	  margin-top: 0.75rem;
+	  border-top: 1px solid rgba(255, 255, 255, 0.06);
+	  padding-top: 0.5rem;
+	}
 
     /* Footer */
     footer {
@@ -562,10 +679,104 @@
         </ul>
       </div>
     </div>
+	<!-- Sekcja Zespół i Opiekun -->
+	<div class="section-title-wrap">
+	  <span class="section-num">[02]</span>
+	  <h2 data-key="teamHeading">Skład Zespołu</h2>
+	</div>
 
+	<div class="team-carousel-container">
+	  <div class="team-carousel">
+		
+		<!-- Opiekun Projektu -->
+		<div class="member-card mentor">
+		  <span class="corner-tag tag-tl">ID: LIG-00</span>
+		  <div class="member-avatar-wrap">
+			<img class="member-avatar" src="slawomir.jpg" alt="Opiekun" onerror="this.src='https://placehold.co/300x300/0b1536/38bdf8?text=Opiekun'">
+		  </div>
+		  <div class="member-badge" data-key="roleMentor">Opiekun Naukowy</div>
+		  <div class="member-name" data-key="nameMentor">dr Sławomir Pawłowski</div>
+		  <div class="member-role" data-key="descMentor">Koordynacja naukowa, wsparcie merytoryczne i zgodność z regulaminem ESERO.</div>
+		  <div class="member-subtext">SYS: PROJECT SUPERVISOR</div>
+		</div>
+
+		<!-- Członek 1: Team Leader / Software -->
+		<div class="member-card">
+		  <span class="corner-tag tag-tl">ID: LIG-01</span>
+		  <div class="member-avatar-wrap">
+			<img class="member-avatar" src="krystian.jpg" alt="Team Leader" onerror="this.src='https://placehold.co/300x300/0b1536/e879f9?text=Lider'">
+		  </div>
+		  <div class="member-badge" data-key="roleLeader">Lider Zespołu</div>
+		  <div class="member-name">Krystian Cywiński</div>
+		  <div class="member-role" data-key="descLeader">Zarządzanie projektem, budowa stacji naziemnej, strona internetowa</div>
+		  <div class="member-subtext">PROJECT: CEO / SUPPORT</div>
+		</div>
+
+		<!-- Członek 2: Radio / LoRa Specialist -->
+		<div class="member-card">
+		  <span class="corner-tag tag-tl">ID: LIG-02</span>
+		  <div class="member-avatar-wrap">
+			<img class="member-avatar" src="tymoteusz.jpg" alt="Radio Inżynier" onerror="this.src='https://placehold.co/300x300/0b1536/e879f9?text=RF'">
+		  </div>
+		  <div class="member-badge" data-key="roleRadio">Systemy Radiowe & LoRa</div>
+		  <div class="member-name">Tymoteusz Feja</div>
+		  <div class="member-role" data-key="descRadio">Projekt systemu lokalizacji radiowej niezależnej od GNSS, elektronika i systemy embedded.</div>
+		  <div class="member-subtext">HARDWARE: LORA / ESP</div>
+		</div>
+
+		<!-- Członek 3: Electronics / PCB -->
+		<div class="member-card">
+		  <span class="corner-tag tag-tl">ID: LIG-03</span>
+		  <div class="member-avatar-wrap">
+			<img class="member-avatar" src="jakubdz.jpg" alt="Elektronik" onerror="this.src='https://placehold.co/300x300/0b1536/e879f9?text=PCB'">
+		  </div>
+		  <div class="member-badge" data-key="roleElectronics">Elektronika & Zasilanie</div>
+		  <div class="member-name">Jakub Dziadkiewicz</div>
+		  <div class="member-role" data-key="descElectronics">Projekt płytki drukowanej PCB, dystrybucja mocy i czujniki telemetryczne.</div>
+		  <div class="member-subtext">DESIGN: POWER / KICAD</div>
+		</div>
+
+		<!-- Członek 4: Mechanics / CAD -->
+		<div class="member-card">
+		  <span class="corner-tag tag-tl">ID: LIG-04</span>
+		  <div class="member-avatar-wrap">
+			<img class="member-avatar" src="jakubbur.jpg" alt="Mechanik" onerror="this.src='https://placehold.co/300x300/0b1536/e879f9?text=SOFTWARE'">
+		  </div>
+		  <div class="member-badge" data-key="roleStructure">Software Engineer</div>
+		  <div class="member-name">Jakub Buresz</div>
+		  <div class="member-role" data-key="descStructure">Oprogramowanie elektroniki wewnątrz puszki, przesyłanie i analiza danych.</div>
+		  <div class="member-subtext">STACK: C++ / EMBEDDED</div>
+		</div>
+
+		<!-- Członek 5: Parachute / Recovery -->
+		<div class="member-card">
+		  <span class="corner-tag tag-tl">ID: LIG-05</span>
+		  <div class="member-avatar-wrap">
+			<img class="member-avatar" src="jakubbrz.jpg" alt="Odzysk" onerror="this.src='https://placehold.co/300x300/0b1536/e879f9?text=Odzysk'">
+		  </div>
+		  <div class="member-badge" data-key="roleRecovery">Recovery & CAD</div>
+		  <div class="member-name">Jakub Brzozowski</div>
+		  <div class="member-role" data-key="descRecovery">Projekt spadochronu i obudowy, obliczenia opadania aerodynamicznego i testy zrzutów.</div>
+		  <div class="member-subtext">SYS: PARACHUTE / CAD</div>
+		</div>
+
+		<!-- Członek 6: PR / Social Media & Outreach -->
+		<div class="member-card">
+		  <span class="corner-tag tag-tl">ID: LIG-06</span>
+		  <div class="member-avatar-wrap">
+			<img class="member-avatar" src="tomasz.jpg" alt="Media" onerror="this.src='https://placehold.co/300x300/0b1536/e879f9?text=Media'">
+		  </div>
+		  <div class="member-badge" data-key="roleMedia">Promocja & Outreach</div>
+		  <div class="member-name">Tomasz Sowiak</div>
+		  <div class="member-role" data-key="descMedia">Relacje z partnerami, prowadzenie social mediów i dokumentacja wizualna projektu.</div>
+		  <div class="member-subtext">CHANNEL: IG / SPONSORS</div>
+		</div>
+
+	  </div>
+	</div>
     <!-- Sekcja Partnerzy i Sponsorzy -->
     <div class="section-title-wrap" id="partnerzy">
-      <span class="section-num">[02]</span>
+      <span class="section-num">[03]</span>
       <h2 data-key="partnerHeading">Partnerzy &amp; Współpraca</h2>
     </div>
 
@@ -628,6 +839,22 @@
         partnerBannerDesc: "Wspierasz zespół młodych inżynierów rozwijających technologie kosmiczne i obronne. Oferujemy ekspozycję Twojej marki w materiałach konkursowych i social mediach.",
         btnPartnerMail: "Zostań partnerem / Współpraca",
 		slotPlaceholder: "[ MIEJSCE NA TWOJE LOGO ]",
+		teamHeading: "Skład Zespołu",
+		roleMentor: "Opiekun Naukowy",
+		descMentor: "Koordynacja naukowa, wsparcie merytoryczne i zgodność z regulaminem ESERO.",
+		roleLeader: "Lider Zespołu",
+		descLeader: "Zarządzanie projektem, budowa stacji naziemnej, strona internetowa.",
+		roleRadio: "Systemy Radiowe & LoRa",
+		descRadio: "Projekt systemu lokalizacji radiowej niezależnej od GNSS, elektronika i systemy embedded.",
+		roleElectronics: "Elektronika & Zasilanie",
+		descElectronics: "Projekt płytki drukowanej PCB, dystrybucja mocy i czujniki telemetryczne.",
+		roleStructure: "Software Engineer",
+		descStructure: "Oprogramowanie elektroniki wewnątrz puszki, przesyłanie i analiza danych.",
+		roleRecovery: "Recovery & CAD",
+		descRecovery: "Projekt spadochronu i obudowy, obliczenia opadania aerodynamicznego i testy zrzutów.",
+		roleMedia: "Promocja & Outreach",
+		descMedia: "Relacje z partnerami, prowadzenie social mediów i dokumentacja wizualna projektu.",
+		nameMentor: "dr Sławomir Pawłowski",
         rights: "Email: lignitesat@googlegroups.com"
       },
       en: {
@@ -650,6 +877,22 @@
 		partnerBannerDesc: "Support a team of young engineers developing dual-use aerospace and defense technologies. We provide brand visibility across our competition reports and social media channels.",
 		btnPartnerMail: "Become a Partner / Sponsor Us",
 		slotPlaceholder: "[ YOUR LOGO HERE ]",
+		teamHeading: "Our Team",
+		roleMentor: "Scientific Advisor",
+		descMentor: "Scientific coordination, technical support, and ESERO regulatory compliance.",
+		roleLeader: "Team Leader",
+		descLeader: "Project management, ground station development, and website engineering.",
+		roleRadio: "Radio Systems & LoRa",
+		descRadio: "Design of the GNSS-denied radiolocation system, hardware, and embedded electronics.",
+		roleElectronics: "Electronics & Power",
+		descElectronics: "Custom PCB design, power management system, and telemetry sensors.",
+		roleStructure: "Software Engineer",
+		descStructure: "Onboard firmware development, real-time data transmission, and analytics.",
+		roleRecovery: "Recovery & CAD",
+		descRecovery: "Parachute and structural design, aerodynamic descent calculations, and drop testing.",
+		roleMedia: "Promocja & Outreach",
+		descMedia: "Sponsorship acquisition, social media management, and visual documentation.",
+		nameMentor: "Sławomir Pawłowski, PhD",
 		rights: "Email: lignitesat@googlegroups.com"
       }
     };
